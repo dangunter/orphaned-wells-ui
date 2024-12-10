@@ -15,7 +15,7 @@ Dan Gunter (LBNL), Michael Pesce (LBNL), Rajshree Deshmukh (LBNL), Mumbi Mundia-
 
 ## Motivation
 Details describing the construction and use history of all wells in the U.S. are missing from most public and proprietary well databases.
-Most well information is not digitial.
+Most well information is not digital.
 This hinders well plugging planning, understanding historic practices, and well characterization efforts.
 
 To address these challenges, the OGGRE tool is a user-friendly platform that allows users to leverage OCR and LLM models
