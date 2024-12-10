@@ -7,7 +7,8 @@ sidebar_position: 3
 
 ## Introduction
 
-OGRRE uses Google DocAI for digitizing documents.
+OGRRE currently uses [Google Document AI (DocAI)](https://cloud.google.com/document-ai),
+a commercial cloud service, for digitizing documents.
 
 This page describes the workflow used to process well records through DocAI.
 
@@ -28,79 +29,87 @@ Following are terms used in this page:
 |field|attribute|One named value in a document|
 
 
-## Workflow
+## Overview
 
-Below is a diagram showing an overview of the workflow:
+Below is a diagram showing an overview of the workflow.
+
+The basic three steps, each of which require training the service, are:
+* **Split**: Separate the pages with information from the rest. Historical documents may have
+hundreds of pages, only a handful of which have the desired information. We train a *splitter* that can extract only
+the necessary pages. This step saves a large amount of data transfer, storage, and processing time, as all future
+steps work only with the subset of pages split out of the raw input.
+```mermaid
+flowchart LR
+    doc_raw([raw PDFs])
+    doc_split(["`split documents *name_category_count*`"])
+    mod_split_m[Model]
+    mod_split[/Split the documents/]
+    mod_split_label[/training/]
+
+    doc_raw --> mod_split_label --> mod_split_m
+    doc_raw --> mod_split
+    mod_split_m --> mod_split
+    mod_split --> doc_split
+```
+
+* **Classify**: Break documents into *categories*. Document formats vary widely. To improve the precision and accuracy of the data extraction,
+we first train a *classifier* to recognize several categories of similar documents. The trained *classifier* can then sort the records into 
+Google "buckets".
+```mermaid
+flowchart LR
+    mod_class_cat([classifier categories])
+    mod_class_train[/training/]
+    mod_class_m[Model]
+    doc_split2(["`split documents *name_category_count*`"])    
+    mod_class[/Classify documents/]
+
+    subgraph Google Buckets
+        buck_ac@{ shape: docs, label: "Category 1" }
+        buck_bc@{ shape: docs, label: "Category 2" }
+        buck_dotc@{ shape: docs, label: "...etc..." }
+    end
+
+    mod_class_cat --> mod_class_train
+    mod_class_train --> mod_class_m
+    mod_class_m --> mod_class
+    doc_split2 --> mod_class
+    mod_class --> buck_ac
+    mod_class --> buck_bc
+    mod_class --> buck_dotc
+```
+* **Extract**: Each document category, corresponding to a Google bucket, is trained separately to extract the fields specified in the shared *schema*.
+The results of this step are displayed, along with the document PDF (reduced to relevant pages by the *splitter*) in the OGRRE tool for manual correction.
 
 ```mermaid
-flowchart TD
-    subgraph Split
-        direction LR
-        doc_raw([raw PDFs])
-        doc_split(["`split documents *name_category_count*`"])
-        mod_split_m[Model]
-        mod_split[/Split the documents/]
-        mod_split_label[/training/]
-
-        doc_raw --> mod_split_label --> mod_split_m
-        doc_raw --> mod_split
-        mod_split_m --> mod_split
-        mod_split --> doc_split
+flowchart LR
+    subgraph Google Buckets
+        buck_ac@{ shape: docs, label: "Category 1" }
+        buck_bc@{ shape: docs, label: "Category 2" }
+        buck_dotc@{ shape: docs, label: "...etc..." }
     end
 
-    subgraph Classify
-        direction LR
-        mod_class_cat([classifier categories])
-        mod_class_train[/training/]
-        mod_class_m[Model]
-        doc_split2(["`split documents *name_category_count*`"])    
-        mod_class[/Classify documents/]
+    mod_ex_train_a[/train Category 2/]
+    mod_ex_a[DocAI Model for Category 1]
 
-        subgraph Google Buckets
-            buck_ac@{ shape: docs, label: "A" }
-            buck_bc@{ shape: docs, label: "B" }
-            buck_dotc@{ shape: docs, label: "..." }
-        end
+    mod_ex_train_b[/train Category 2/]
+    mod_ex_b[DocAI Model for Category 2]
 
-        mod_class_cat --> mod_class_train
-        mod_class_train --> mod_class_m
-        mod_class_m --> mod_class
-        doc_split2 --> mod_class
-        mod_class --> buck_ac
-        mod_class --> buck_bc
-        mod_class --> buck_dotc
+    subgraph OGRRE
+        og_script1[/Upload Category 1/]
+        og_script2[/Upload Category 2/]
+        og_db[("`OGRRE<br>database`")]
+        og_tool{OGRRE Tool}
     end
-
-
-    Split -- split documents --> Classify
-
-    subgraph Extract
-        direction LR
-        subgraph Google Bucket A
-            buck_a@{ shape: docs, label: "Documents" }
-        end
-        subgraph Google Bucket B
-            buck_b@{ shape: docs, label: "Documents" }
-        end
-
-        mod_ex_train_a[/training A/]
-        mod_ex_a[Model A]
-        buck_a --> mod_ex_train_a --> mod_ex_a
-
-        mod_ex_train_b[/training B/]
-        mod_ex_b[Model B]
-        buck_b --> mod_ex_train_b --> mod_ex_b
-
-        subgraph OGRRE
-           og_script[/Upload script/]
-           og_db[("`OGRRE<br>database`")]
-        end
-        buck_a --> og_script --> mod_ex_a -- data --> og_db
-        buck_b --> og_script --> mod_ex_b-- data --> og_db
-    end
-
-    Classify -- classified documents --> Extract
+    og_script1 -- PDF --> og_db
+    buck_ac --> og_script1 -- PDF --> mod_ex_a -- Data --> og_db
+    buck_ac --> mod_ex_train_a --> mod_ex_a
+    buck_bc --> mod_ex_train_b --> mod_ex_b
+    buck_bc --> og_script2 -- PDF --> mod_ex_b-- Data --> og_db
+    og_script2 -- PDF --> og_db
+    og_db <--> og_tool
 ```
+
+## Detailed Description
 
 ### Split
 

@@ -25,3 +25,10 @@ for rapid data extraction from records.
 
 Currently, OGRRE is being used in tandem with close collaboration with the joint LBNL and NETL team.
 For those working with this team already, please see this [guide](guide).
+
+----
+
+<img src="../img/catalog-logo-whitebg.png" height="100px"/>
+<img src="../img/lbnl-logo-whitebg.png" height="100px"/>
+<img src="../img/netl-logo-whitebg.png" height="100px"/>
+<img src="../img/doe-logo-whitebg.png" height="100px"/>
