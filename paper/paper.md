@@ -3,34 +3,50 @@ title: 'OGRRE: A Web-Based Platform for Digitizing Oil and Gas Regulatory Record
 authors:
   - name: Greg Lackey
     affiliation: '1'
-  - name: Benjamin Houghton
-    affiliation: '1'
   - name: Jacob Shay
     affiliation: '1'
+    affiliation: '2'
+  - name: Robert Loza
+    affiliation: '1'
+    affiliation: '2'
+  - name: Paul Holcomb
+    affiliation: '1'
+    affiliation: '2'
+  - name: Nathaniel Mitchell
+    affiliation: '1'
+    affiliation: '2'    
+  - name: Benjamin Houghton
+    affiliation: '1'
+    affiliation: '2'
+  - name: Leebyn Chong
+    affiliation: '1'
+    affiliation: '2'
   - name: Dan Gunter
-    affiliation: '2'
-  - name: Michael Pesce
-    affiliation: '2'
-  - name: Rajshree Deshmukh
-    affiliation: '2'
-  - name: Chester J. Weiss
     affiliation: '3'
-  - name: David Buttler
+  - name: Michael Pesce
+    affiliation: '3'
+  - name: Rajshree Deshmukh
+    affiliation: '3'
+  - name: Chester J. Weiss
     affiliation: '4'
-  - name: Martin Ma
+  - name: David Buttler
     affiliation: '5'
+  - name: Javier Santos
+    affiliation: '6'
 affiliations:
   - index: 1
     name: National Energy Technology Laboratory, United States
   - index: 2
-    name: Lawrence Berkeley National Laboratory, United States
+    name: NETL Support Contractor, United States   
   - index: 3
-    name: Sandia National Laboratories, United States
+    name: Lawrence Berkeley National Laboratory, United States
   - index: 4
-    name: Lawrence Livermore National Laboratory, United States
+    name: Sandia National Laboratories, United States
   - index: 5
+    name: Lawrence Livermore National Laboratory, United States
+  - index: 6
     name: Los Alamos National Laboratory, United States
-date: 30 July 2026
+date: 25 September 2026
 bibliography: paper.bib
 ---
 
@@ -51,6 +67,7 @@ OGRRE is an IDP platform that was designed to address these gaps by facilitating
 
 The target users of OGRRE are teams working with historical regulatory, geological, or engineering well records. OGRRE is developed by the Department of Energy's Consortium Advancing Technology for Assessment of Lost Oil & Gas Wells (CATALOG) [@energyCATALOGx2013], a collaboration involving Lawrence Berkeley, Los Alamos, Sandia, and Lawrence Livermore National Laboratories together with the National Energy Technology Laboratory. The source code, deployment configuration, and user documentation are available from the [project repository](https://github.com/CATALOG-Historic-Records/orphaned-wells-ui). The software is consequently focused on a practical research need: making heterogeneous historical records usable for downstream scientific and public-interest analysis.
 
+
 # State of the field
 
 There are many commercial and open-source IDP software tools available. Companies such as ABBYY [@abbyy], Docparser [@docparser], and Hyland [@hyland] offer enterprise software that contains entire IDP workflows including document splitting, classification, text extraction, human-in-the-loop review, and data export. Cloud service providers such as Google [@googleDocumentAI], Amazon [@aws_textract], and Microsoft [@microsoft_azure_doc_intelligence] also offer application programming interfaces (APIs) for proprietary document processing models that can be used to develop custom web-based IDP software. Both enterprise software and cloud-based IDP models traditionally rely on the manual labeling of documents and document fields to fine tune pre-trained models focused on document splitting, classification, or data extraction. In recent years, advancements in frontier multimodal large language models (LLMs) such as ChatGPT [@chatgpt2026], Claude [@claude2026], and Gemini [@gemini2026], have made structured data extraction from document images less cumbersome by removing the need for labeling. However, LLMs alone do not offer a complete IDP workflow. To address this, companies like Unstract [@unstract] have built platforms that leverage multimodal large language models within an IDP pipeline. 
@@ -63,27 +80,27 @@ OGRRE is a custom IDP web platform designed to facilitate structured text extrac
 
 OGRRE is implemented as a ReactJS [@reactjs] and TypeScript frontend. The frontend communicates with a server written in Python using the FastAPI framework, backed by a MongoDB [@mongodb] database. The interface, API, and persistence layers can be deployed independently. The repository includes Docker Compose [@dockerCompose] configuration for running the frontend, backend, and database together during development, as well as deployment configurations for Google Cloud. This architecture reflects a balance between accessibility for users and operational requirements for teams processing documents at scale.
 
-The central data model organizes records into projects and record groups and associates each record with its source document, extracted attributes, confidence values, and review state. Processor definitions and schemas are managed through the interface, so a project can represent the fields expected for a particular document type without changing the application code. Users can upload individual files or directories, optionally run configured cleaning functions, and export selected fields as CSV, JSON, or text-embedded PDFs. JSON export retains additional metadata such as confidence values, while CSV supports common analysis and spreadsheet workflows.
+The central data model organizes records into projects and record groups and associates each record with its source document, extracted attributes, confidence values, and review state. Processor definitions and schemas are managed through the interface, so a project can represent the fields expected for a particular document type without changing the application code. Users can upload individual files or directories, optionally run configured cleaning functions, and export selected fields as comma separated values (CSVs), Javascript Object Notation (JSON), and embedded portable document format (PDF) files. JSON export retains additional metadata such as confidence values, while CSV supports common analysis and spreadsheet workflows.
 
-The document-processing workflow is broken into a four-stage workflow, with the first three stages performed by Python scripts and interaction with the AI processing tools (currently, Google Document AI [@googleDocumentAI]). A _splitter_  identifies document boundaries in collated PDFs; a _classifier_ assigns documents to categories; and an _extractor_ finds and extracts field-value pairs for each category. The resulting fields and values are stored in the OGRRE database for review by the OGRRE UI. Separating these stages provides flexibility and aligns with the workflow expected by both the current Google Document AI and future open-source AI document processing workflows. Finally, users of the OGRRE UI _review_ the documents and can export results in standard formats. The document-processing workflow in OGRRE is designed to separate the responsibilities of the development team, which implements the _splitters_, _classifiers_, and _extractors_, from the review teams, which reviews and verifies the records.
+The document-processing workflow is broken into a four-stage workflow, with the first three stages performed by Python scripts and interaction with the AI processing tools (currently, Google Document AI [@googleDocumentAI]). A _splitter_  identifies document boundaries in collated PDFs; a _classifier_ assigns documents to categories; and an _extractor_ finds and extracts field-value pairs for each category. The resulting fields and values are stored in the OGRRE database for review by the OGRRE UI. Separating these stages provides flexibility and aligns with the workflow expected by both the current Google Document AI and future open-source AI document processing workflows. Finally, users of the OGRRE UI _review_ the documents [Figure 2] and can export results in standard formats. The document-processing workflow in OGRRE is designed to separate the responsibilities of the development team, which implements the _splitters_, _classifiers_, and _extractors_, from the review teams, which reviews and verifies the records.
 
 The OGRRE UI emphasizes review efficiency. Extracted fields and values are displayed alongside the source document, selecting a field shows its location on the image, values can be sorted based on model confidence, and keyboard shortcuts support movement through records. Document review statuses can also be assigned by reviewers to manage projects. Document statuses include unreviewed, incomplete, reviewed, and defective, which make the state of a document visible to collaborators. Thus, the OGGRE UI favors the traceability and collaborative correction of documents over a fully automated but opaque pipeline.
 
 ![alt text](ogrre-ui.png)
-Figure 1: OGRRE UI. This screen shows review of a document. The fields on the left show extracted field-value pairs, which can be edited by a person and saved to the database. As fields are selected on the left, the corresponding bounding box detected by the AI processing are highlighted in the image on the right. Document review statuses can be set using buttons at the bottom of the page. Numerous keyboard shortcuts allow for navigation through a list of documents.
+Figure 2: OGRRE UI. This screen shows review of a document. The fields on the left show extracted field-value pairs, which can be edited by a person and saved to the database. As fields are selected on the left, the corresponding bounding box detected by the AI processing are highlighted in the image on the right. Document review statuses can be set using buttons at the bottom of the page. Numerous keyboard shortcuts allow for navigation through a list of documents.
 
 # Research impact statement
 
-OGRRE is being used in collaboration with the joint Lawrence Berkeley National Laboratory and National Energy Technology Laboratory team, and the repository provides deployment configurations for multiple collaborator-specific instances. Its documentation includes a complete workflow for configuring processors, uploading and reviewing records, updating schemas, and exporting data, as well as a Docker-based development stack and Google Cloud deployment guidance. These materials provide a basis for reproducible adoption by research teams with comparable document-digitization needs.
+OGRRE is used by multiple oil and gas industry stakeholders in collaboration with the joint Lawrence Berkeley National Laboratory and National Energy Technology Laboratory team, and the repository provides deployment configurations for the various collaborator-specific instances. Its documentation includes a complete workflow for configuring processors, uploading and reviewing records, updating schemas, and exporting data, as well as a Docker-based development stack and Google Cloud deployment guidance. These materials provide a basis for reproducible adoption by research teams with comparable document-digitization needs.
 
-The immediate research value of OGRRE is its ability to provide reliable data for orphaned well locations and characteristics which can augment field studies and other document sources. In studies of orphaned and undocumented wells, the platform can help connect information extracted from historical records with later analyses of well locations, construction, production history, and remediation priorities. The project materials supplied for this draft do not identify a peer-reviewed publication that directly reports results produced with OGRRE; the authors should add representative datasets, deployments, benchmarks, and publications here before submission if they are available. Such evidence would allow the paper to quantify throughput, extraction accuracy, review effort, or reuse by external groups.
+The immediate research value of OGRRE is its ability to provide reliable data for orphaned well locations and construction details, which inform field efforts and data analyses focused on finding and characterizing orphaned wells. In particular, the platform can help connect information extracted from historical records with later analyses of well locations, construction, and production history. To date, the data processed with OGRRE have been ingested into databases managed by the CATALOG team and state agency partners.
 
 # AI usage disclosure
 
-Generative AI was used to assist with the preparation of this draft paper. The generated text was based on `info.txt`, the OGRRE documentation, the public source repository, and the JOSS paper-format guidance. The content was checked against those materials, and claims not supported by them were either qualified or marked for author verification. No claim in this disclosure implies that generative AI was used to create the OGRRE software itself.
+Generative AI was used to assist with the preparation of this draft paper. The generated text was based on `info.txt`, the OGRRE documentation, the public source repository, and the JOSS paper-format guidance. No claim in this disclosure implies that generative AI was used to create the OGRRE software itself.
 
 # Acknowledgements
 
-OGRRE was developed as part of the U.S. Department of Energy's Consortium Advancing Technology for Assessment of Lost Oil & Gas Wells (CATALOG). The authors should add the applicable DOE award numbers, laboratory contract numbers, and any other financial support required by the participating institutions before submission.
+This work was supported as part of the Consortium Advancing Technology for Assessment of Lost Oil & Gas Wells, funded by the Undocumented Orphan Well Program in the Office of Oil and Natural Gas within the Hydrocarbon and Geothermal Energy Office of the U.S. Department of Energy. Parts of this work were performed under the auspices of the U.S. Department of Energy by Lawrence Livermore National Laboratory under Contract DE-AC52-07NA27344 and Lawrence Berkeley National Laboratory under Contract DE-AC02-05CH11231.
 
 # References
