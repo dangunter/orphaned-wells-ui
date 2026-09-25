@@ -16,12 +16,12 @@ authors:
   - name: Benjamin Houghton
     affiliation: '1'
     affiliation: '3'
+ - name: Robert Loza
+    affiliation: '1'
+    affiliation: '3'
   - name: Nathaniel Mitchell
     affiliation: '1'
     affiliation: '3'    
-  - name: Robert Loza
-    affiliation: '1'
-    affiliation: '3'
   - name: Jacob Shay
     affiliation: '1'
     affiliation: '3'
@@ -86,7 +86,7 @@ The immediate research value of OGRRE is its ability to provide reliable data fo
 
 # AI usage disclosure
 
-Generative AI **[Chat GPT 5.4-mini]** was used to assist with the preparation of this draft paper. The generated text was based on `info.txt`, the OGRRE documentation, the public source repository, and the JOSS paper-format guidance. The paper was reviewed and edited by the authors to ensure the accuracy of the content. Generative AI tools **[Chat GPT 5.5, 5.6, and 6 and Gemini 3.6 Flask]** were also used for software development. The authors conducted rigorous manual code reviews, verified the logic, and implemented a comprehensive automated test suite to ensure the technical integrity of AI-generated contributions. 
+Generative AI **[Chat GPT 5.4-mini]** was used to assist with the preparation of this paper. The generated text was based on `info.txt`, the OGRRE documentation, the public source repository, and the JOSS paper-format guidance. The paper was reviewed and edited by the authors to ensure the accuracy of the content. Generative AI tools **[Chat GPT 5.5, 5.6, and 6 and Gemini 3.6 Flask]** were also used for software development. The authors manually reviewed the code, verified the logic, and implemented a comprehensive automated test suite to ensure the technical integrity of AI-generated contributions. 
 
 # Acknowledgements
 
