@@ -1,38 +1,33 @@
 ---
-title: 'OGRRE: A Web-Based Platform for Digitizing Oil and Gas Regulatory Records'
+title: 'OGRRE: A Web-Based Platform for Digitizing Historic Energy Records'
 authors:
   - name: Greg Lackey
     affiliation: '1'
-  - name: Jacob Shay
-    affiliation: '1'
+  - name: Michael Pesce
     affiliation: '2'
-  - name: Robert Loza
-    affiliation: '1'
-    affiliation: '2'
-  - name: Paul Holcomb
-    affiliation: '1'
-    affiliation: '2'
-  - name: Nathaniel Mitchell
-    affiliation: '1'
-    affiliation: '2'    
-  - name: Benjamin Houghton
-    affiliation: '1'
+  - name: Rajshree Deshmukh
     affiliation: '2'
   - name: Leebyn Chong
     affiliation: '1'
-    affiliation: '2'
+    affiliation: '3'
+  - name: Paul Holcomb
+    affiliation: '1'
+    affiliation: '3'
+  - name: Benjamin Houghton
+    affiliation: '1'
+    affiliation: '3'
+  - name: Nathaniel Mitchell
+    affiliation: '1'
+    affiliation: '3'    
+  - name: Robert Loza
+    affiliation: '1'
+    affiliation: '3'
+  - name: Jacob Shay
+    affiliation: '1'
+    affiliation: '3'
   - name: Dan Gunter
-    affiliation: '3'
-  - name: Michael Pesce
-    affiliation: '3'
-  - name: Rajshree Deshmukh
-    affiliation: '3'
-  - name: Chester J. Weiss
-    affiliation: '4'
-  - name: David Buttler
-    affiliation: '5'
-  - name: Javier Santos
-    affiliation: '6'
+    affiliation: '2'
+
 affiliations:
   - index: 1
     name: National Energy Technology Laboratory, United States
@@ -40,19 +35,14 @@ affiliations:
     name: NETL Support Contractor, United States   
   - index: 3
     name: Lawrence Berkeley National Laboratory, United States
-  - index: 4
-    name: Sandia National Laboratories, United States
-  - index: 5
-    name: Lawrence Livermore National Laboratory, United States
-  - index: 6
-    name: Los Alamos National Laboratory, United States
+
 date: 25 September 2026
 bibliography: paper.bib
 ---
 
 # Summary
 
-The Oil and Gas Regulatory Record Digitizer (OGRRE) is an open-source, web-based, intelligent document processing (IDP) platform that converts images of scanned documents into structured datasets ready for analysis or import into a relational database. OGRRE was originally designed for teams assembling accurate information from scanned images of historical oil and gas well records that contain information not represented in modern oil and gas databases; however, the scope is expanding to consider any subsurface energy record. OGRRE is designed to execute an entire IDP pipeline, including document splitting and classification, text extraction, human-in-the-loop review, and data export [Figure 1]. The platform connects external document-processing models and custom data cleaning functions with a graphical user interface (UI) where users can upload records, review extracted values alongside source documents, correct errors, and export validated data in a variety of formats. Users can also set document review statuses, take notes, and elevate issues to a supervisor, which facilitates project management. In the current deployment, IDP capabilities are provided by Google Document AI processors, while OGRRE supplies the project, record, schema, review, and export workflows. 
+The Oil and Gas Regulatory Record Digitizer (OGRRE) is an open-source, web-based, intelligent document processing (IDP) platform that converts images of scanned documents into structured datasets ready for analysis or import into a relational database. OGRRE was originally designed for teams assembling accurate information from scanned images of historical oil and gas well records that contain information not represented in modern oil and gas databases; however, the scope is expanding to consider any energy record. OGRRE is designed to execute an entire IDP pipeline, including document splitting and classification, text extraction, human-in-the-loop review, and data export [Figure 1]. The platform connects external document-processing models and custom data cleaning functions with a graphical user interface (UI) where users can upload records, review extracted values alongside source documents, correct errors, and export validated data in a variety of formats. Users can also set document review statuses, take notes, and elevate issues to a supervisor, which facilitates project management. In the current deployment, IDP capabilities are provided by Google Document AI processors, while OGRRE supplies the project, record, schema, review, and export workflows. 
 
 ![alt text](OGRRE_Data_Flow.png)
 Figure 1: Capability overview of the Oil and Gas Regulatory Record Digitizer (OGRRE).
@@ -66,7 +56,6 @@ State agencies such as oil and gas regulators and geological surveys are typical
 OGRRE is an IDP platform that was designed to address these gaps by facilitating the extraction of structured data from scanned images of well records. Human-in-the-loop review is the primary focus of the OGGRE user interface because document scans vary widely in quality and data accuracy is a high-priority for stakeholders working with well information. Inside the user interface, document reviewers can clean extracted data with custom cleaning functions, select fields to see their locations in the source image, edit values that were incorrectly extracted, add additional fields that were missed, assign document review status, retain notes, embed extracted data in PDFs, and export data in multiple formats. These capabilities supports a transparent document processing workflow in which the accuracy of machine-generated results is verified by human reviewers before it is used for research purposes or transmitted to an agency database.
 
 The target users of OGRRE are teams working with historical regulatory, geological, or engineering well records. OGRRE is developed by the Department of Energy's Consortium Advancing Technology for Assessment of Lost Oil & Gas Wells (CATALOG) [@energyCATALOGx2013], a collaboration involving Lawrence Berkeley, Los Alamos, Sandia, and Lawrence Livermore National Laboratories together with the National Energy Technology Laboratory. The source code, deployment configuration, and user documentation are available from the [project repository](https://github.com/CATALOG-Historic-Records/orphaned-wells-ui). The software is consequently focused on a practical research need: making heterogeneous historical records usable for downstream scientific and public-interest analysis.
-
 
 # State of the field
 
@@ -97,10 +86,10 @@ The immediate research value of OGRRE is its ability to provide reliable data fo
 
 # AI usage disclosure
 
-Generative AI was used to assist with the preparation of this draft paper. The generated text was based on `info.txt`, the OGRRE documentation, the public source repository, and the JOSS paper-format guidance. No claim in this disclosure implies that generative AI was used to create the OGRRE software itself.
+Generative AI **[Chat GPT 5.4-mini]** was used to assist with the preparation of this draft paper. The generated text was based on `info.txt`, the OGRRE documentation, the public source repository, and the JOSS paper-format guidance. The paper was reviewed and edited by the authors to ensure the accuracy of the content. Generative AI tools **[Chat GPT 5.5, 5.6, and 6 and Gemini 3.6 Flask]** were also used for software development. The authors conducted rigorous manual code reviews, verified the logic, and implemented a comprehensive automated test suite to ensure the technical integrity of AI-generated contributions. 
 
 # Acknowledgements
 
-This work was supported as part of the Consortium Advancing Technology for Assessment of Lost Oil & Gas Wells, funded by the Undocumented Orphan Well Program in the Office of Oil and Natural Gas within the Hydrocarbon and Geothermal Energy Office of the U.S. Department of Energy. Parts of this work were performed under the auspices of the U.S. Department of Energy by Lawrence Livermore National Laboratory under Contract DE-AC52-07NA27344 and Lawrence Berkeley National Laboratory under Contract DE-AC02-05CH11231.
+This work was supported as part of the Consortium Advancing Technology for Assessment of Lost Oil & Gas Wells, funded by the Undocumented Orphan Well Program in the Office of Oil and Natural Gas within the Hydrocarbon and Geothermal Energy Office of the U.S. Department of Energy. Parts of this work were performed under the auspices of the U.S. Department of Energy by Lawrence Berkeley National Laboratory under Contract DE-AC02-05CH11231.
 
 # References
